@@ -48,7 +48,7 @@ def lire(url, essais=3):
     derniere = None
     for k in range(essais):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "VeillePascalImmo/1.0 (usage interne agence)"})
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36 VeillePascalImmo/1.0", "Accept-Language": "fr-FR,fr;q=0.9"})
             with urllib.request.urlopen(req, timeout=30) as r:
                 brut = r.read()
                 m = re.search(rb'charset="?([\w-]+)', brut[:3000])
@@ -133,7 +133,11 @@ def main():
     mandats = charger_json(F_MANDATS, {})
     fiches = lister_fiches()
     if not fiches:
+        p1 = lire(PAGE_1)
         print("Aucune annonce trouvée : présentation du site changée ? Rien n'est modifié.")
+        print("  taille de la page :", len(p1), "| titre :", (re.search(r"<title>(.*?)</title>", p1, re.S) or [None, "?"])[1][:100])
+        i = p1.find("fiches/")
+        print("  extrait :", re.sub(r"\s+", " ", p1[max(0, i - 200):i + 200] if i >= 0 else p1[:600]))
         sys.exit(1)
 
     en_ligne, erreurs = {}, []
