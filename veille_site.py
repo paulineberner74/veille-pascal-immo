@@ -38,10 +38,12 @@ MAX_PAGES = 50       # sécurité
 
 
 def maintenant():
-    # heure de Paris (UTC+1 / UTC+2 selon la saison, approximation suffisante ici)
-    utc = datetime.now(timezone.utc)
-    ete = 3 < utc.month < 11 or (utc.month == 3 and utc.day >= 25) or (utc.month == 10 and utc.day < 25)
-    return (utc + timedelta(hours=2 if ete else 1)).strftime("%Y-%m-%d %H:%M")
+    # heure de Paris (heure d'été / d'hiver gérée automatiquement)
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("Europe/Paris")).strftime("%Y-%m-%d %H:%M")
+    except Exception:
+        return (datetime.now(timezone.utc) + timedelta(hours=1)).strftime("%Y-%m-%d %H:%M")
 
 
 def lire(url, essais=3):
