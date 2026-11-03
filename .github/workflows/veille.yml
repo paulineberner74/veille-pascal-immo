@@ -2,9 +2,13 @@ name: Veille des prix du site
 
 on:
   schedule:
-    # 2 passages par jour (heures UTC) : ~7h40 et ~13h40 à Paris en hiver
-    - cron: "41 6 * * *"
-    - cron: "41 12 * * *"
+    # 4 passages par jour (heures UTC ; Paris = +1 h en hiver) : GitHub lance
+    # souvent ses tâches avec plusieurs heures de retard, 4 créneaux
+    # garantissent au moins 2 relevés par jour
+    - cron: "41 4 * * *"
+    - cron: "41 9 * * *"
+    - cron: "41 13 * * *"
+    - cron: "41 18 * * *"
   workflow_dispatch: {}      # bouton "Run workflow" pour lancer à la main
 
 permissions:
